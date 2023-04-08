@@ -5,8 +5,8 @@ import {ICamera} from './ICamera'
 let cameraSchema: Schema = new mongoose.Schema({
 
     name: {type: String, required: true, unique: true},
-    description: {type: String, required: true},
-    url: {type: String, required: true}
+    description: {type: String, default:null},
+    url: {type: String, default:null}
 
 }, {timestamps:true});
 

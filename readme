@@ -69,11 +69,25 @@ access: private
 Camera Network Module
 ---------------------
 
-1. Create a camera Network
+1. Get all camera Networks
 
-usage: To create camera network
+usage: when click 'camera network' module, get all camera networks
+url: http://127.0.0.1:5000/cameranetwork/networkcameras
+method: get
+fields: no-fields
+Access: public 
+
+
+
+2. Create a camera Network
+
+usage: When click add 'camera network' button,
 url: http://127.0.0.1:5000/cameras/camera
 method: post
-fields: name, description, cameras
+fields: name, description
 access: private
+
+3. Add cameras
+
+usage: when click 'add camera
 

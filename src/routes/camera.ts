@@ -2,17 +2,17 @@ import express from 'express'
 import { body, validationResult } from 'express-validator'
 import { ICamera } from '../../models/ICamera';
 import Camera from '../../models/camera';
+import { ObjectId } from 'mongoose';
 
 
 const cameraRouter : express.Router = express.Router();
 
 
-cameraRouter.post('/camera', [
+cameraRouter.post('/camera', /* [
     body('name').not().isEmpty().withMessage('Name is required'),
     body('description').not().isEmpty().withMessage('Description is required'),
     body('url').not().isEmpty().withMessage('url is required'),
-], [
-], async (req: express.Request, res: express.Response) => {
+], */ async (req: express.Request, res: express.Response) => {
 
     let errors = validationResult(req)
     if (!errors.isEmpty()) {
@@ -136,21 +136,31 @@ cameraRouter.put('/camera/:cameraId', [
 
     
     try {
-        let cameraId = req.params.cameraId
-        let cameraDetails = req.body
+        let cameraId:string = req.params.cameraId
+        let cameraDetails:ICamera = req.body
         console.log(cameraId);
         console.log(cameraDetails);
         
         
         //todo updation logic
-             Camera.findByIdAndUpdate({_id:cameraId}, cameraDetails, { new: true})
+        let updatedCamera = await Camera.findByIdAndUpdate(cameraId, cameraDetails, { new: true})
+        if(!updatedCamera){
+            return res.status(400).json({
+               erros: [
+                {
+                    msg:"No camera found"
+                }
+                ]
+            })
+        }
              
              
              // let camera = Camera.findOne({_id: cameraId})
 
         
         res.status(200).json({
-            msg: 'camera updated (using put) successfully'
+            msg: 'camera updated (using put) successfully',
+            updatedCamera: updatedCamera
         })
     }   
     catch (err) {
@@ -200,16 +210,25 @@ cameraRouter.delete('/camera/:cameraId', [
 
     
     try {
-        let cameraId = req.params.cameraId
+        let cameraId:string = req.params.cameraId
         //todo deletion logic
         
-        //todo updation logic
-              Camera.findByIdAndRemove(cameraId)
-              //let camera = Camera.findOne({_id: cameraId})
-
+       
+           let removedCamera = await Camera.findByIdAndRemove(cameraId)
+           if(!removedCamera){
+                return res.status(400).json({
+                   errors: [
+                        {
+                            msg: "No camera found"
+                        }
+                    ]
+                })
+           }
+            
         
         res.status(200).json({
-            msg: 'camera deleted successfully' //send deleted camera
+            msg: 'camera deleted successfully',
+            removedCamera: removedCamera
         })
     }   
     catch (err) {
