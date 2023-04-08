@@ -1,0 +1,22 @@
+plan
+
+server setup
+
+routing setup
+
+database set up
+
+server-side modules
+----------------------
+express
+express-validator
+mongoose
+dotenv
+
+@types/express
+@types/express-validator
+@types/mongoose
+@types/dotenv
+@types/node
+
+
