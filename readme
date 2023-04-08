@@ -28,10 +28,10 @@ To deploy this project run
 
 
 
-Camera Module
---------------
+## I Camera Module
+-------------------
 
-1. Create a camera
+## 1. Create a camera
 
 usage: To create camera
 url: http://127.0.0.1:5000/cameras/camera
@@ -39,7 +39,7 @@ method: post
 fields: name, description, url
 access: private
 
-2. Get all Cameras
+## 2. Get all Cameras
 
 usage: To create camera
 url: http://127.0.0.1:5000/cameras/cameras
@@ -48,7 +48,7 @@ fields: no-fields
 access: public
 
 
-3 . Update a camera
+## 3. Update a camera
 
 usage: To create camera
 url: http://127.0.0.1:5000/cameras/:cameraId
@@ -57,7 +57,7 @@ fields: name, description, url
 access: private
 
 
-4. delete a camera
+## 4. delete a camera
 
 usage: To delete a camera
 url: http://127.0.0.1:5000/cameras/:cameraId
@@ -66,10 +66,23 @@ fields: no-fields
 access: private
 
 
-Camera Network Module
----------------------
+## 5. Get single camera
 
-1. Get all camera Networks
+usage:Get single camera
+url: http://127.0.0.1:5000/cameras/:cameraId
+method: get
+fields: no-fields
+access: public
+
+
+
+
+
+
+## II Camera Network Module
+--------------------------
+
+## 1. Get all camera Networks
 
 usage: when click 'camera network' module, get all camera networks
 url: http://127.0.0.1:5000/cameranetwork/networkcameras
@@ -79,7 +92,7 @@ Access: public
 
 
 
-2. Create a camera Network
+## 2. Create a camera Network
 
 usage: When click add 'camera network' button,
 url: http://127.0.0.1:5000/cameras/camera
@@ -87,7 +100,9 @@ method: post
 fields: name, description
 access: private
 
-3. Add cameras
+## 3. Add cameras
 
-usage: when click 'add camera
+usage: select one 'cameraNetwork', Click 'add camera' option, the 'camera listing page' will render, and we can select any number of cameras and click submit then redirect to that cameraNetwork and when click final submit, two array passed to server inside json objbect. [one array have the info of 'camera network' and another array have selected camera's ids] eg:- payload format: {cameras:[cam1Id, cam2Id, cam3Id], cameraNetwork:[details ofcameraNetwork]}
+url:  http://127.0.0.1/cameranetworks/cameraNetwork/:cameraNetworkid
+methed
 

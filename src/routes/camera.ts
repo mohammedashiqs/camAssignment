@@ -1,46 +1,26 @@
 import express from 'express'
 import { body, validationResult } from 'express-validator'
-import { ICamera } from '../../models/ICamera';
-import Camera from '../../models/camera';
-import { ObjectId } from 'mongoose';
+import { ICamera } from '../camera/models/ICamera';
+import Camera from '../camera/models/camera';
+import { createCamera } from '../camera/services/cameraServices';
+
 
 
 const cameraRouter: express.Router = express.Router();
 
 
-cameraRouter.post('/camera', /* [
-    body('name').not().isEmpty().withMessage('Name is required'),
-    body('description').not().isEmpty().withMessage('Description is required'),
-    body('url').not().isEmpty().withMessage('url is required'),
-], */ async (req: express.Request, res: express.Response) => {
-
-        let errors = validationResult(req)
-        if (!errors.isEmpty()) {
-            return res.status(400).json({
-                errors: errors.array()
-            })
-        }
+cameraRouter.post('/camera', async (req: express.Request, res: express.Response) => {
 
         try {
-            let { name, description, url } = req.body
-            //todo registration logic
+            let camera:ICamera = req.body
+            /*  todo registration logic */
+            
 
-            //check if the camera is exists
-            let camera: ICamera | null = await Camera.findOne({ name: name })
-            if (camera) {
-                return res.status(400).json({
-                    errors: [
-                        { msg: 'camera is Already exists' }
-                    ]
-                })
-            }
-
-            //register the camera 
-            camera = new Camera({ name, description, url })
-            camera = await camera.save()
+           let createdCamera = await createCamera(camera)
 
             res.status(200).json({
-                msg: 'camera created successfully'
+                msg: 'camera created successfully',
+                createdCamera: createdCamera
             })
         }
         catch (err) {
@@ -58,8 +38,7 @@ cameraRouter.post('/camera', /* [
 
 
 
-cameraRouter.get('/cameras', [
-], async (req: express.Request, res: express.Response) => {
+cameraRouter.get('/cameras', async (req: express.Request, res: express.Response) => {
 
 
     try {
