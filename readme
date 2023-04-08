@@ -1,22 +1,79 @@
-plan
 
-server setup
+# CAM-ASSIGNMENT REST API(127.0.0.1:5000)
 
-routing setup
+A rest api designed to create camera and make camera networks
 
-database set up
+## Appendix
 
-server-side modules
-----------------------
-express
-express-validator
-mongoose
-dotenv
+Developed using Node js, Typescript, Express js, Mongoose
 
-@types/express
-@types/express-validator
-@types/mongoose
-@types/dotenv
-@types/node
+ 
 
+
+## Authors
+
+- [@Mohammed Ashiq](https://github.com/mohammedashiqs)
+
+
+## Deployment
+
+To deploy this project run
+
+```bash
+  npm start
+```
+
+
+## API Reference
+
+
+
+Camera Module
+--------------
+
+1. Create a camera
+
+usage: To create camera
+url: http://127.0.0.1:5000/cameras/camera
+method: post
+fields: name, description, url
+access: private
+
+2. Get all Cameras
+
+usage: To create camera
+url: http://127.0.0.1:5000/cameras/cameras
+method: get
+fields: no-fields
+access: public
+
+
+3 . Update a camera
+
+usage: To create camera
+url: http://127.0.0.1:5000/cameras/:cameraId
+method: put
+fields: name, description, url
+access: private
+
+
+4. delete a camera
+
+usage: To delete a camera
+url: http://127.0.0.1:5000/cameras/:cameraId
+method: delete
+fields: no-fields
+access: private
+
+
+Camera Network Module
+---------------------
+
+1. Create a camera
+
+usage: To create camera
+url: http://127.0.0.1:5000/cameras/camera
+method: post
+fields: name, description, url
+access: private
 
