@@ -69,11 +69,11 @@ access: private
 Camera Network Module
 ---------------------
 
-1. Create a camera
+1. Create a camera Network
 
-usage: To create camera
+usage: To create camera network
 url: http://127.0.0.1:5000/cameras/camera
 method: post
-fields: name, description, url
+fields: name, description, cameras
 access: private
 
