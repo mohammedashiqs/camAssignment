@@ -5,14 +5,14 @@ import mongoose from "mongoose"
 
 
 
-export const createCamera = async (camera: ICamera) => {
+export const createCamera = async (cameraDetails: ICamera) => {
 
 
     try {
 
         //check if the camera is exists
 
-        let isCameraExist = await Camera.findOne({ name: camera.name })
+        let isCameraExist = await Camera.findOne({ name: cameraDetails.name })
         if (isCameraExist) {
             throw new CustomError(
                 "camera is Already exists",
@@ -23,10 +23,10 @@ export const createCamera = async (camera: ICamera) => {
 
 
         //register the camera 
-        camera = new Camera(camera)
-        camera = await camera.save()
+        cameraDetails = new Camera(cameraDetails)
+       let createdCamera = await cameraDetails.save()
 
-        return camera
+        return createdCamera
 
     } catch (error) {
         throw error;

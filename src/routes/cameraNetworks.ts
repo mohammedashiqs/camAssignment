@@ -1,37 +1,29 @@
 import express from 'express'
 import { ICameraNetwork } from '../cameraNetwork/models/ICameraNetwork';
-import CameraNetwork from '../cameraNetwork/models/cameraNetwork';
+import { createCameraNetwork } from '../cameraNetwork/services/cameraNetworkServices';
 
 
 const cameraNetworksRouter: express.Router = express.Router();
 
 
 
-cameraNetworksRouter.post('/cameraNetwork', (req: express.Request, res: express.Response) => {
+cameraNetworksRouter.post('/cameraNetwork', async (req: express.Request, res: express.Response, next) => {
 
     try {
+        let cameraNetworkDetails: ICameraNetwork = req.body
+        /* todo registraion logic */
 
-        /*  todo registraion logic */
+        let createdCameraNetwork = await createCameraNetwork(cameraNetworkDetails)
 
-        //check if the cameranetwork exists
-
-        //register the cameranetwork
-        
 
         res.status(200).json({
-            msg: "cameranetwork created successfully"
+            msg: "Camera Network created successfully",
+            createdCameraNetwork: createdCameraNetwork
         })
 
     } catch (err) {
 
-        console.log(err);
-        res.status(500).json({
-            errors: [
-                {
-                    msg: err
-                }
-            ]
-        })
+        next(err)
 
     }
 
