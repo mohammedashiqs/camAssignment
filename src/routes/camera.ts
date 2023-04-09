@@ -1,9 +1,14 @@
 import express from 'express'
-import { body, validationResult } from 'express-validator'
 import { ICamera } from '../camera/models/ICamera';
 import Camera from '../camera/models/camera';
-import { createCamera } from '../camera/services/cameraServices';
-import { error } from 'console';
+import {
+    createCamera,
+    getAllCameras,
+    getCamera,
+    updateCamera,
+    removeCamera
+} from '../camera/services/cameraServices';
+import mongoose from 'mongoose';
 
 
 
@@ -12,164 +17,100 @@ const cameraRouter: express.Router = express.Router();
 
 cameraRouter.post('/camera', async (req: express.Request, res: express.Response, next) => {
 
-        try {
-            let camera:ICamera = req.body
-            /*  todo registration logic */
-            
+    try {
+        let camera: ICamera = req.body
+        /*  todo registration logic */
 
-           let createdCamera = await createCamera(camera)
+        let createdCamera = await createCamera(camera)
 
-            res.status(200).json({
-                msg: 'camera created successfully',
-                createdCamera: createdCamera
-            })
-        }
-        catch(error) {
-            
-            
-            next(error)
+        res.status(200).json({
+            msg: 'camera created successfully',
+            createdCamera: createdCamera
+        })
+    }
+    catch (error) {
+        next(error)
 
-        }
-    })
+    }
+})
 
 
 
-cameraRouter.get('/cameras', async (req: express.Request, res: express.Response) => {
+cameraRouter.get('/cameras', async (req: express.Request, res: express.Response, next) => {
 
 
     try {
         //todo get all cameras logic
-        let camera: ICamera[] | null = await Camera.find()
-        if (!camera) {
-            res.status(400).json({
-                errors: [
-                    {
-                        msg: 'No events found'
-                    }
-                ]
-            })
-        }
 
+        let camera = await getAllCameras()
 
         res.status(200).json({
             camera: camera
         })
     }
     catch (err) {
-        console.log(err);
-        res.status(500).json({
-            errors: [
-                {
-                    msg: err
-                }
-            ]
-        })
-
+        next(err)
     }
 })
 
 
-cameraRouter.get('/camera/:cameraId', [
-], async (req: express.Request, res: express.Response) => {
+cameraRouter.get('/camera/:cameraId', async (req: express.Request, res: express.Response, next) => {
 
 
     try {
-        let { cameraId } = req.params
+        let cameraId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.params.cameraId)
         //todo get single camera logic
-        let camera: ICamera | null = await Camera.findById(cameraId)
-        if (!camera) {
-            res.status(400).json({
-                errors: [
-                    {
-                        msg: 'No camera found'
-                    }
-                ]
-            })
-        }
 
+        let camera = await getCamera(cameraId)
 
         res.status(200).json({
             camera: camera
         })
-    }
-    catch (err) {
-        console.log(err);
-        res.status(500).json({
-            errors: [
-                {
-                    msg: err
-                }
-            ]
-        })
+    } catch (err) {
+        next(err)
 
     }
-})
+}
+)
 
 
 
-cameraRouter.put('/camera/:cameraId', [
-], async (req: express.Request, res: express.Response) => {
+
+
+cameraRouter.put('/camera/:cameraId', async (req: express.Request, res: express.Response, next) => {
 
 
     try {
-        let cameraId: string = req.params.cameraId
+        let cameraId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.params.cameraId)
         let cameraDetails: ICamera = req.body
-        console.log(cameraId);
-        console.log(cameraDetails);
 
 
         //todo updation logic
-        let updatedCamera = await Camera.findByIdAndUpdate(cameraId, cameraDetails, { new: true })
-        if (!updatedCamera) {
-            return res.status(400).json({
-                erros: [
-                    {
-                        msg: "No camera found"
-                    }
-                ]
-            })
-        }
 
+        let updatedCamera = await updateCamera(cameraId, cameraDetails)
 
         res.status(200).json({
-            msg: 'camera updated (using put) successfully',
+            msg: 'camera updated successfully',
             updatedCamera: updatedCamera
         })
     }
     catch (err) {
-        console.log(err);
-        res.status(500).json({
-            errors: [
-                {
-                    msg: err
-                }
-            ]
-        })
+        next(err)
 
     }
 })
 
 
 
-cameraRouter.delete('/camera/:cameraId', [
-], async (req: express.Request, res: express.Response) => {
+cameraRouter.delete('/camera/:cameraId', async (req: express.Request, res: express.Response, next) => {
 
 
     try {
-        let cameraId: string = req.params.cameraId
+        let cameraId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.params.cameraId)
         //todo deletion logic
 
 
-        let removedCamera = await Camera.findByIdAndRemove(cameraId)
-        if (!removedCamera) {
-            return res.status(400).json({
-                errors: [
-                    {
-                        msg: "No camera found"
-                    }
-                ]
-            })
-        }
+        let removedCamera = await removeCamera(cameraId)
 
 
         res.status(200).json({
@@ -178,14 +119,7 @@ cameraRouter.delete('/camera/:cameraId', [
         })
     }
     catch (err) {
-        console.log(err);
-        res.status(500).json({
-            errors: [
-                {
-                    msg: err
-                }
-            ]
-        })
+        next(err)
 
     }
 })
