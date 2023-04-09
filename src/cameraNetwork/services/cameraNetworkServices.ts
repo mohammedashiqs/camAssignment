@@ -1,3 +1,4 @@
+import mongoose from "mongoose"
 import { CustomError } from "../../../commen/custumError"
 import { ICameraNetwork } from "../models/ICameraNetwork"
 import CameraNetwork from "../models/cameraNetwork"
@@ -60,6 +61,54 @@ export const getAllCameraNetworks = async () => {
 
     } catch (err) {
         throw err
+    }
+}
+
+
+export const updateCameraNetwork = async (cameraNetworkId: mongoose.Types.ObjectId, cameraNetworkDetails: ICameraNetwork) => {
+
+    try {
+
+        let updatedCameraNetwork = await CameraNetwork.findByIdAndUpdate(cameraNetworkId, cameraNetworkDetails,
+            { new: true })
+
+        return updatedCameraNetwork
+
+    } catch (error) {
+        throw error
+    }
+
+
+
+}
+
+
+export const addCameraToCameraNetwork = async (cameraNetworkId: mongoose.Types.ObjectId, cameras: object[]) => {
+console.log(cameras);
+
+    try {
+        //remove all cameras inside this cameraNetwork
+        await CameraNetwork.updateOne({ _id: cameraNetworkId }, {
+            $pull: {cameras:{}}
+        })
+
+
+        /* ToDo Insert cameras to cameraNetwork's array logic */
+
+        const camerasToBeInstert = await cameras.map((camera: any) => {
+            const cameraId = new mongoose.Types.ObjectId(camera.cameraId)
+            return { cameraId: cameraId }
+        })
+
+        let updatedCameraNetwork = await CameraNetwork.updateOne({ _id: cameraNetworkId }, {
+            $push: { cameras: { $each: camerasToBeInstert } }
+        })
+
+
+        return updatedCameraNetwork
+
+    } catch (error) {
+        throw error
     }
 }
 

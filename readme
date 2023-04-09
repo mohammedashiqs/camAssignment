@@ -82,7 +82,7 @@ access: public
 ## II Camera Network Module
 --------------------------
 
- 1. Get all camera Networks
+## 1. Get all camera Networks
 
 usage: when click 'camera network' module, get all camera networks
 url: http://127.0.0.1:5000/cameranetwork/networkcameras
@@ -100,9 +100,20 @@ method: post
 fields: name, description
 access: private
 
- 3. Add cameras
+## 3. Add cameras
 
-usage: select one 'cameraNetwork', Click 'add camera' option, the 'camera listing page' will render, and we can select any number of cameras and click submit then redirect to that cameraNetwork and when click final submit, two array passed to server inside json objbect. [one array have the info of 'camera network' and another array have selected camera's ids] eg:- payload format: {cameras:[cam1Id, cam2Id, cam3Id], cameraNetwork:[details ofcameraNetwork]}
+usage: select one 'cameraNetwork', Click 'add camera' option, the 'camera listing page' will render, and we can select any number of cameras and click submit then redirect to that cameraNetwork and when click final save button, two array passed to server inside json object. [one array have the info of a 'camera network' and another array have selected camera's ids] 
 url:  http://127.0.0.1/cameranetworks/cameraNetwork/:cameraNetworkid
-methed
+methed: put
+fields: name description cameras
+access: private
+
+payload format: body {
+  cameras: [{cameraId: 001}, {cameraId:002}],
+  cameraNetwork: {
+    _id: 0001,
+    name: "camera network 1"
+    description: "description of cameraNetwork 1"
+   }
+}
 
