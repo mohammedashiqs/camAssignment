@@ -3,13 +3,14 @@ import { body, validationResult } from 'express-validator'
 import { ICamera } from '../camera/models/ICamera';
 import Camera from '../camera/models/camera';
 import { createCamera } from '../camera/services/cameraServices';
+import { error } from 'console';
 
 
 
 const cameraRouter: express.Router = express.Router();
 
 
-cameraRouter.post('/camera', async (req: express.Request, res: express.Response) => {
+cameraRouter.post('/camera', async (req: express.Request, res: express.Response, next) => {
 
         try {
             let camera:ICamera = req.body
@@ -23,15 +24,10 @@ cameraRouter.post('/camera', async (req: express.Request, res: express.Response)
                 createdCamera: createdCamera
             })
         }
-        catch (err) {
-            console.log(err);
-            res.status(500).json({
-                error: [
-                    {
-                        msg: err
-                    }
-                ]
-            })
+        catch(error) {
+            
+            
+            next(error)
 
         }
     })
@@ -62,7 +58,7 @@ cameraRouter.get('/cameras', async (req: express.Request, res: express.Response)
     catch (err) {
         console.log(err);
         res.status(500).json({
-            error: [
+            errors: [
                 {
                     msg: err
                 }
@@ -99,7 +95,7 @@ cameraRouter.get('/camera/:cameraId', [
     catch (err) {
         console.log(err);
         res.status(500).json({
-            error: [
+            errors: [
                 {
                     msg: err
                 }
@@ -143,7 +139,7 @@ cameraRouter.put('/camera/:cameraId', [
     catch (err) {
         console.log(err);
         res.status(500).json({
-            error: [
+            errors: [
                 {
                     msg: err
                 }
@@ -184,7 +180,7 @@ cameraRouter.delete('/camera/:cameraId', [
     catch (err) {
         console.log(err);
         res.status(500).json({
-            error: [
+            errors: [
                 {
                     msg: err
                 }

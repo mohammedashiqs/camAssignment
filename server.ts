@@ -1,7 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
-
+import handleError from './src/middlewares/errorHandlingMiddleware'
 import camera from "./src/routes/camera"
 import cameraNetworks from "./src/routes/cameraNetworks"
 
@@ -26,7 +26,8 @@ if(dbUrl){
         
     })
     
-    }
+}
+
 
 
 app.get('/', (req: express.Request, res: express.Response) => {
@@ -36,6 +37,8 @@ app.get('/', (req: express.Request, res: express.Response) => {
 //router configuration
 app.use('/cameras', camera)
 app.use('/cameranetworks', cameraNetworks)
+
+app.use(handleError)
 
 app.listen(port, () => {
     console.log(`Server is running on the port ${port}`);
