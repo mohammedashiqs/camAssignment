@@ -2,6 +2,7 @@ import { ICamera } from "../models/ICamera"
 import Camera from "../models/camera"
 import { CustomError } from "../../../commen/custumError"
 import mongoose from "mongoose"
+import CameraNetwork from "../../cameraNetwork/models/cameraNetwork"
 
 
 
@@ -24,7 +25,7 @@ export const createCamera = async (cameraDetails: ICamera) => {
 
         //register the camera 
         cameraDetails = new Camera(cameraDetails)
-       let createdCamera = await cameraDetails.save()
+        let createdCamera = await cameraDetails.save()
 
         return createdCamera
 
@@ -77,7 +78,7 @@ export const getCamera = async (cameraId: mongoose.Types.ObjectId) => {
 }
 
 
-export const updateCamera = async (cameraId: mongoose.Types.ObjectId, cameraDetails:ICamera) => {
+export const updateCamera = async (cameraId: mongoose.Types.ObjectId, cameraDetails: ICamera) => {
 
     try {
 
@@ -100,7 +101,7 @@ export const updateCamera = async (cameraId: mongoose.Types.ObjectId, cameraDeta
 
 
 export const removeCamera = async (cameraId: mongoose.Types.ObjectId) => {
-    try{
+    try {
 
         let removedCamera = await Camera.findByIdAndRemove(cameraId)
         if (!removedCamera) {
@@ -111,9 +112,18 @@ export const removeCamera = async (cameraId: mongoose.Types.ObjectId) => {
             )
         }
 
+        const removedCameraId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(removedCamera._id)
+
+        //that camera's id also delete in field of cameras in cameraNetwork collection
+        //remove all cameras inside this cameraNetwork
+        const updatedCameraNetwork = await CameraNetwork.updateMany({}, {
+            $pull: { cameras: { cameraId: removedCameraId } }
+        })
+        console.log(updatedCameraNetwork);
+        
         return removedCamera
 
-    }catch(err){
+    } catch (err) {
         throw err
     }
 }

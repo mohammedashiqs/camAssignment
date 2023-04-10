@@ -57,7 +57,7 @@ fields: name, description, url
 access: private
 
 
-4. delete a camera
+## 4. delete a camera
 
 usage: To delete a camera and it will also delete if there is in any camera network
 url: http://127.0.0.1:5000/cameras/:cameraId
