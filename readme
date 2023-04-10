@@ -57,9 +57,9 @@ fields: name, description, url
 access: private
 
 
-## 4. delete a camera
+4. delete a camera
 
-usage: To delete a camera
+usage: To delete a camera and it will also delete if there is in any camera network
 url: http://127.0.0.1:5000/cameras/:cameraId
 method: delete
 fields: no-fields
@@ -100,7 +100,7 @@ method: post
 fields: name, description
 access: private
 
-## 3. Add cameras
+## 3. update Camera Network (Also add cameras)
 
 usage: select one 'cameraNetwork', Click 'add camera' option, the 'camera listing page' will render, and we can select any number of cameras and click submit then redirect to that cameraNetwork and when click final save button, two array passed to server inside json object. [one array have the info of a 'camera network' and another array have selected camera's ids] 
 url:  http://127.0.0.1/cameranetworks/cameraNetwork/:cameraNetworkid
@@ -117,3 +117,31 @@ payload format: body {
    }
 }
 
+
+
+## 4. Delete CameraNetwork
+
+usage: To delete cameraNetwork
+url: http://127.0.0.1/cameranetworks/cameraNetwork/:cameraNetworkid
+method: delete
+field: no-field
+Access: private
+
+
+## 5. get single cameraNetwork
+ usage: Get single cameraNetwork details
+ url: http://127.0.0.1/cameranetworks/cameraNetwork/:cameraNetworkid
+ method: get
+ field: no-field
+ Access: private
+
+
+
+
+
+
+
+
+
+
+ 

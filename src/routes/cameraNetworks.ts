@@ -4,6 +4,8 @@ import {
     addCameraToCameraNetwork,
     createCameraNetwork,
     getAllCameraNetworks,
+    getCameraNetwork,
+    removeCameraNetwork,
     updateCameraNetwork
 } from '../cameraNetwork/services/cameraNetworkServices';
 import mongoose from 'mongoose';
@@ -45,7 +47,7 @@ cameraNetworksRouter.get('/cameraNetwork', async (req: express.Request, res: exp
 
         res.status(200).json({
             msg: "Camera networks fetched successfully",
-            cameraNetworks: cameraNetworks
+            data: { ...cameraNetworks[0] }
         })
 
 
@@ -87,6 +89,46 @@ cameraNetworksRouter.put('/cameraNetwork/:cameraNetworkId', async (req: express.
 })
 
 
+cameraNetworksRouter.delete('/cameraNetwork/:cameraNetworkId', async (req: express.Request, res: express.Response, next) => {
+
+    try {
+
+        const cameraNetworkId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.params.cameraNetworkId)
+        //todo deletion logic
+        let removedCameraNetwork = await removeCameraNetwork(cameraNetworkId)
+
+        if (removedCameraNetwork) {
+            res.status(200).json({
+                msg: "Camera Network removed Successfully",
+                removedCameraNetwork: removedCameraNetwork
+            })
+        }
+
+    } catch (error) {
+        next(error)
+    }
+
+
+})
+
+
+cameraNetworksRouter.get('/cameraNetwork/:cameraNetworkId', async (req: express.Request, res: express.Response, next) => {
+
+    try {
+        const cameraNetworkId: mongoose.Types.ObjectId = new mongoose.Types.ObjectId(req.params.cameraNetworkId)
+
+        let cameraNetworkDetails = await getCameraNetwork(cameraNetworkId)
+        console.log(cameraNetworkDetails);
+        
+        res.status(200).json({
+            msg: "cameraNetwork fetched successfull",
+            cameraNetwork: cameraNetworkDetails
+        })
+
+    } catch (error) {
+        next(error)
+    }
+})
 
 
 

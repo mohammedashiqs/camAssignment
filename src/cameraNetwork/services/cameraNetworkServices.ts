@@ -84,12 +84,12 @@ export const updateCameraNetwork = async (cameraNetworkId: mongoose.Types.Object
 
 
 export const addCameraToCameraNetwork = async (cameraNetworkId: mongoose.Types.ObjectId, cameras: object[]) => {
-console.log(cameras);
+    console.log(cameras);
 
     try {
         //remove all cameras inside this cameraNetwork
         await CameraNetwork.updateOne({ _id: cameraNetworkId }, {
-            $pull: {cameras:{}}
+            $pull: { cameras: {} }
         })
 
 
@@ -113,3 +113,81 @@ console.log(cameras);
 }
 
 
+export const removeCameraNetwork = async (cameraNetworkId: mongoose.Types.ObjectId) => {
+    try {
+        let removedCameraNetwork = await CameraNetwork.findByIdAndDelete(cameraNetworkId)
+        if (!removedCameraNetwork) {
+            throw new CustomError(
+                "CameraNetwork not found",
+                400,
+                ""
+            )
+        }
+
+        return removedCameraNetwork
+
+    } catch (error) {
+        throw error
+    }
+}
+
+
+export const getCameraNetwork = async (cameraNetworkId: mongoose.Types.ObjectId) => {
+
+    try {
+
+        const aggregate = CameraNetwork.aggregate()
+        aggregate.match({ _id: cameraNetworkId })
+        aggregate.facet({
+
+
+            cameraNetwork: [
+                {
+                    $project:{
+                        name:1,
+                        description:1,
+                        cameras: {$ifNull: ["$cameras", [] ]}
+                    }
+                },
+                {
+                    $unwind: {
+                        path: "$cameras",
+                        preserveNullAndEmptyArrays: true
+                    }
+                },
+                {
+                    $lookup:{
+                        from:"cameras",
+                        localField: "cameras.cameraId",
+                        foreignField: "_id",
+                        as: "cameras.cameraId"
+
+                    }
+                },
+                {
+                    $unwind: "$cameras.cameraId"
+                },
+                {
+                    $group:{
+                        _id: "$_id",
+                        name: {$first: "$name"},
+                        description: {$first: "$description"},
+                        cameras: {$push: "$cameras"}
+                    }
+                }
+                
+            ]
+
+
+        })
+
+        const cameraNetworkDetails = await aggregate.exec()
+
+        return { ...cameraNetworkDetails[0].cameraNetwork[0] }
+
+    } catch (error) {
+        throw error
+    }
+
+
+}
